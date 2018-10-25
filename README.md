@@ -23,13 +23,13 @@
 
 ## Conclusion
 * Performance
-  
-![](https://i.imgur.com/Y4RY2qT.png)
-* Demo
+
+    ![](https://i.imgur.com/Y4RY2qT.png)
+
+* Demo  
     ```
     $ python spamClassifier.py [--data=Youtube04-Eminem.csv ] [--text="I am spam"]
     ```
-
     + --data: file you wanna train
     + --text: comment you wanna classify
 
