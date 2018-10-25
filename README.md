@@ -19,7 +19,7 @@
     + Loss function: cross entropy of sigmoid
     + Optimizer: Adaptive Moment Estimation
     + Tuning the parameters e.g. batch size, learning rate
-![](https://i.imgur.com/9gzfZyB.png)
+![](https://i.imgur.com/Na6PQn2.png)
 
 ## Conclusion
 * Performance

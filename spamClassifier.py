@@ -14,8 +14,8 @@ import tensorflow as tf
 
 sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
-tf.set_random_seed(1)
-np.random.seed(1)
+tf.set_random_seed(111)
+np.random.seed(111)
 
 def parse_args():
     parser = argparse.ArgumentParser()
