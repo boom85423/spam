@@ -3,7 +3,6 @@ title: "Spam Recognition"
 author: "Yi-Zhan Xu"
 date: "2018/10/26"
 '''
-from time import time
 import io, sys, os
 import argparse
 import pandas as pd
@@ -15,18 +14,22 @@ import tensorflow as tf
 
 sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+tf.set_random_seed(1)
+np.random.seed(1)
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, default="Youtube01-Psy.csv")
-    parser.add_argument('--model_path', type=str, default="D2V/.doc2vec")
-    parser.add_argument('--params_path', type=str, default="DNN/.params")
+    parser.add_argument('--model_path', type=str, default="D2V/doc2vec")
+    parser.add_argument('--params_path', type=str, default="DNN/params")
     parser.add_argument('--batch_size', type=int, default=32) 
     parser.add_argument('--verbose', type=int, default=50)
     parser.add_argument('--epochs', type=int, default=500) # early stopping
     parser.add_argument('--lr', type=int, default=5e-3) 
     parser.add_argument('--dropout', type=int, default=0.5)
     parser.add_argument('--text', type=str, default="I am spam")
+    parser.add_argument('--visual', type=str, default="visual/")
+    parser.add_argument('--status', type=str, default="train")
     return parser.parse_args()
 
 def preprocessing(data_path):
@@ -60,6 +63,7 @@ def D2V(content_list, tag, vector_size, model_path):
     model = Doc2Vec(content_meta, vector_size=vector_size)
     model.train(content_meta, total_examples=model.corpus_count, epochs=100)
     model.save(model_path)
+    # model = Doc2Vec.load(args.model_path)
     content_vec = [model.docvecs["%s_%d" % (tag,i)] for i in range(len(content_list))]
     content_vec = np.asarray(content_vec)
     return content_vec
@@ -106,15 +110,26 @@ if __name__ == "__main__":
     accuracy = tf.metrics.accuracy(labels=tf.argmax(tf_y, axis=1), predictions=tf.argmax(output, axis=1),)[1]
 
     with tf.Session() as sess: # save for train
+        writer = tf.summary.FileWriter(args.visual + args.status, sess.graph)
+        tf.summary.scalar("LOSS", loss)
+        merge_op = tf.summary.merge_all()
+        
         init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
         sess.run(init_op)
         saver = tf.train.Saver() 
+
         for epoch in range(args.epochs):
             for step in range(round(x_train.shape[0] / args.batch_size)):
                 b_x, b_y = next_batch(x_train, y_train, args.batch_size)
-                train_, loss_, ACC = sess.run([train_op, loss, accuracy], {tf_x: b_x, tf_y: b_y})
+                train_, ACC = sess.run([train_op, accuracy], {tf_x:b_x, tf_y:b_y})
+                if args.status == "train": # early stopping
+                    feed_dict = {tf_x:b_x, tf_y:b_y}
+                else:
+                    feed_dict = {tf_x:x_test, tf_y:y_test}
+                loss_, res_ = sess.run([loss, merge_op], feed_dict=feed_dict)
+            writer.add_summary(res_, epoch)                        
             if epoch % args.verbose == 0:
-                print("Epoch: %d, ACC_train: %.4f" % (epoch, ACC))
+                print("Epoch: %d, ACC_train: %.4f" % (epoch, ACC))           
         saver.save(sess, args.params_path)
 
     with tf.Session() as sess: # reload for test

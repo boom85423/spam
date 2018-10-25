@@ -19,12 +19,18 @@
     + Loss function: cross entropy of sigmoid
     + Optimizer: Adaptive Moment Estimation
     + Tuning the parameters e.g. batch size, learning rate
+![](https://i.imgur.com/9gzfZyB.png)
 
 ## Conclusion
 * Performance
+  
 ![](https://i.imgur.com/Y4RY2qT.png)
 * Demo
-    + python spamClassifier.py [--data] [--text]
-    + --data=Youtube04-Eminem.csv
-    + --text="Please leave your comment to classfy..."
+    ```
+    $ python spamClassifier.py [--data=Youtube04-Eminem.csv ] [--text="I am spam"]
+    ```
 
+    + --data: file you wanna train
+    + --text: comment you wanna classify
+
+[Github](https://github.com/boom85423/spam)
