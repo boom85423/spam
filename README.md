@@ -22,15 +22,20 @@
 ![](https://i.imgur.com/Na6PQn2.png)
 
 ## Conclusion
-* Performance
-
-    ![](https://i.imgur.com/Y4RY2qT.png)
-
 * Demo  
     ```
     $ python spamClassifier.py [--data=Youtube04-Eminem.csv ] [--text="I am spam"]
     ```
     + --data: file you wanna train
     + --text: comment you wanna classify
+* Performance
+
+    ![](https://i.imgur.com/JZaGu6p.png)
+
+* Furthermore
+
+    ![](https://i.imgur.com/0zDujAX.png)
+
+    + Psy is close to LMFAO and Eminem
 
 [Github](https://github.com/boom85423/spam)
