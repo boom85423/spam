@@ -19,23 +19,25 @@
     + Loss function: cross entropy of sigmoid
     + Optimizer: Adaptive Moment Estimation
     + Tuning the parameters e.g. batch size, learning rate
-![](https://i.imgur.com/Na6PQn2.png)
+![](https://i.imgur.com/THHR4YD.png)
 
 ## Conclusion
 * Demo  
+
     ```
-    $ python spamClassifier.py [--data=Youtube04-Eminem.csv ] [--text="I am spam"]
+    $ python spamClassifier.py [--data=Youtube03-LMFAO.csv] [--text="I am spam"]
     ```
     + --data: file you wanna train
     + --text: comment you wanna classify
 * Performance
 
-    ![](https://i.imgur.com/JZaGu6p.png)
+    ![](https://i.imgur.com/7xnDhYZ.png)
 
 * Furthermore
 
-    ![](https://i.imgur.com/0zDujAX.png)
+    ![](https://i.imgur.com/ps7f8HH.png)
 
-    + Psy is close to LMFAO and Eminem
+    + Compare the ACC on identical model 
+    + LMFAO is close to Eminem and Shakira
 
 [Github](https://github.com/boom85423/spam)

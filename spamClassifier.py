@@ -14,17 +14,15 @@ import tensorflow as tf
 
 sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
-tf.set_random_seed(1)
-np.random.seed(1)
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--train_data', type=str, default="Youtube01-Psy.csv")
+    parser.add_argument('--train_data', type=str, default="Youtube03-LMFAO.csv")
     parser.add_argument('--model_path', type=str, default="D2V/doc2vec")
     parser.add_argument('--params_path', type=str, default="DNN/params")
     parser.add_argument('--batch_size', type=int, default=32) 
-    parser.add_argument('--verbose', type=int, default=50)
-    parser.add_argument('--epochs', type=int, default=500) 
+    parser.add_argument('--verbose', type=int, default=10)
+    parser.add_argument('--epochs', type=int, default=100) 
     parser.add_argument('--lr', type=int, default=5e-3) 
     parser.add_argument('--dropout', type=int, default=0.5)
     parser.add_argument('--text', type=str, default="I am spam")
@@ -77,8 +75,9 @@ def demo(text):
         sess.run(init_op)
         saver = tf.train.Saver()
         saver.restore(sess, args.params_path)
+        words = text.split(" ")
         model = Doc2Vec.load(args.model_path)
-        text_vec = model.infer_vector(args.text).reshape(1,-1)
+        text_vec = model.infer_vector(words).reshape(1,-1)
         test_output = sess.run(output, {tf_x:text_vec})  
         pred_y = np.argmax(test_output, 1)[0]
     if pred_y == 1:
@@ -89,13 +88,13 @@ def demo(text):
 def infer_vec(data):
     content_list, labels_onehot, vector_size = preprocessing("comment/" + data)
     model = Doc2Vec.load(args.model_path)
-    content_vec = np.asarray([model.infer_vector(args.text) for i in content_list])
+    content_vec = np.asarray([model.infer_vector(i) for i in content_list])
     return content_vec, labels_onehot
 
 if __name__ == "__main__":
     args = parse_args()
     content_list, labels_onehot, vector_size = preprocessing("comment/" + args.train_data)
-    content_list = D2V(content_list, "embedding", vector_size, args.model_path)
+    content_list = D2V(content_list, "embedding", vector_size, args.model_path) 
     x_train, x_test, y_train, y_test = train_test_split(content_list, labels_onehot, test_size=0.2)
 
     tf_x = tf.placeholder(tf.float32, [None,vector_size])
@@ -111,7 +110,7 @@ if __name__ == "__main__":
     train_op = tf.train.AdamOptimizer(args.lr).minimize(loss) 
     accuracy = tf.metrics.accuracy(labels=tf.argmax(tf_y, axis=1), predictions=tf.argmax(output, axis=1),)[1]
 
-    with tf.Session() as sess: # use the data to train
+    with tf.Session() as sess:
         print("## Use %s to train..." % args.train_data)
         writer = tf.summary.FileWriter(args.visual + args.status, sess.graph)
         tf.summary.scalar("LOSS", loss)
@@ -145,7 +144,7 @@ if __name__ == "__main__":
 
     demo(args.text)
 
-    for csv in glob.glob(os.path.join("comment/", "*.csv")): # test another 
+    for csv in glob.glob(os.path.join("comment/", "*.csv")): # test another
         if csv != "comment/" + args.train_data:
             with tf.Session() as sess:
                 init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
