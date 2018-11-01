@@ -19,7 +19,7 @@
     + Loss function: cross entropy of sigmoid
     + Optimizer: Adaptive Moment Estimation
     + Tuning the parameters e.g. batch size, learning rate
-![](https://i.imgur.com/THHR4YD.png)
+![](https://i.imgur.com/Ls8nA82.png)
 
 ## Conclusion
 * Demo  
@@ -31,11 +31,11 @@
     + --text: comment you wanna classify
 * Performance
 
-    ![](https://i.imgur.com/7xnDhYZ.png)
+    ![](https://i.imgur.com/t88ermQ.png)
 
 * Furthermore
 
-    ![](https://i.imgur.com/ps7f8HH.png)
+    ![](https://i.imgur.com/itOAsfC.png)
 
     + Compare the ACC on identical model 
     + LMFAO is close to Eminem and Shakira

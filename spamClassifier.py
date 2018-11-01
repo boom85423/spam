@@ -36,9 +36,9 @@ def preprocessing(data_path):
     labels_onehot = []
     for i in labels:
         if i == 0:
-            labels_onehot.append([0, 1])
-        else:
             labels_onehot.append([1, 0])
+        else:
+            labels_onehot.append([0, 1])
     labels_onehot = np.vstack(labels_onehot)
     content = data["CONTENT"].values
     content_list = []
@@ -78,8 +78,8 @@ def demo(text):
         words = text.split(" ")
         model = Doc2Vec.load(args.model_path)
         text_vec = model.infer_vector(words).reshape(1,-1)
-        test_output = sess.run(output, {tf_x:text_vec})  
-        pred_y = np.argmax(test_output, 1)[0]
+        test_output = sess.run(output, {tf_x:text_vec})
+        pred_y = np.argmax(test_output)
     if pred_y == 1:
         print("## %s -> SPAM" % text)
     else:
